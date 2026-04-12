@@ -236,7 +236,7 @@ Entry point che gestisce sia la CLI (`argparse`) sia il menu interattivo. Non co
 ## Confronto con Wolfram Mathematica
 
 La sezione seguente riporta un confronto dei risultati ottenuti dall'algoritmo di Piyavski-Shubert con i minimi globali calcolati analiticamente tramite **Wolfram Mathematica** (funzione `NMinimize`), a scopo di validazione.
-![alt text](image.png)
+![alt text](wolframChecker.png)
 
 ---
 
