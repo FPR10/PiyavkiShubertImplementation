@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 
-# ── Palette ────────────────────────────────────────────────────────────────
+# ── Palette di colori ────────────────────────────────────────────────────────────────
 _C_FUNC  = "#2563EB"   # blu      – curva della funzione
 _C_TENT  = "#F59E0B"   # arancio  – tende di Lipschitz
 _C_OPT   = "#DC2626"   # rosso    – punto ottimale

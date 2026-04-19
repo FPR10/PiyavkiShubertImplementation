@@ -1,7 +1,7 @@
 """
 Algoritmo di Piyavki-Shuber per la minimizzazione globale di funzione univariata con costante di Lipschitz (L) nota.
 
-Struttura dati: heapmin di oggetti Candidate (lower_bound, x_mid, x_left, x_right, f_left, f_right)
+Struttura dati: heapmin di oggetti Candidate (lower_bound, x_hat, x_left, x_right, f_left, f_right)
 |
 |--> ordina le tuple in modo lessicografico, quindi opera i confronti per lower_bound (primo elemento)
 """
@@ -45,7 +45,7 @@ class Candidate:
     
     
 def build_candidate(x_left: float, x_right: float, f_left: float, f_right: float, L: float) -> Candidate:
-    """Costruisce un Candidate per l'intervallo [x_left, x_right] calcolando x_hat e lower_bound
+    """Costruisce un Candidate per l'intervallo [x_left, x_right] calcolando x_hat e lower_bound(caratteristica R)
 
     Args:
         x_left (float): estremo sx dell'intervallo
@@ -135,7 +135,7 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
     
     #Check parametri
     if L <= 0:
-        raise ValueError("L deve essere positivo")
+        raise ValueError("La costante di Lipschitz deve essere positiva")
     if a >= b:
         raise ValueError("a deve essere < b")
     
@@ -147,7 +147,6 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
     INIZIALIZZAZIONE 
     k=1 -> ho un solo sotto-intervallo in [a,b]
     '''
-    
     fa = f(a)
     fb = f(b)
     evaluations = 2
