@@ -119,7 +119,7 @@ Ad ogni iterazione:
 
 Il lower bound di un intervallo $[x_i, x_{i+1}]$ è:
 
-$$lb = \frac{f(x_i) + f(x_{i+1})}{2} - \frac{L \cdot (x_{i+1} - x_i)}{2}$$
+$$lb = R= \frac{f(x_i) + f(x_{i+1})}{2} - \frac{L \cdot (x_{i+1} - x_i)}{2}$$
 
 Il punto di valutazione successivo $\hat{x}$ è:
 
