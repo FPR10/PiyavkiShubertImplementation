@@ -127,32 +127,19 @@ def _draw_convergence(ax, iters, fvals, f_opt: float):
 # ══════════════════════════════════════════════════════════════════════════
 
 def plot_result(tf: TestFunction, result) -> plt.Figure:
-    """
-    Pannello statico con tre grafici:
-      • in alto a sinistra : funzione e punto ottimo trovato
-      • in alto a destra   : funzione con tutti i punti valutati
-      • in basso (intero)  : curva di convergenza f*(k)
-
-    Parametri
-    ---------
-    tf     : TestFunction
-    result : PSResult
-    """
     xs, ys = _sample(tf)
 
-    fig = plt.figure(figsize=(14, 8))
+    fig = plt.figure(figsize=(14, 5))          # altezza ridotta
     fig.patch.set_facecolor(_C_BG)
-    gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.45, wspace=0.35)
+    gs = gridspec.GridSpec(1, 2, figure=fig, wspace=0.35)   # 1 riga, 2 colonne
 
     ax_func = fig.add_subplot(gs[0, 0])
     ax_pts  = fig.add_subplot(gs[0, 1])
-    ax_conv = fig.add_subplot(gs[1, :])
 
     # ── Funzione + ottimo ──────────────────────────────────────────────────
     _style_ax(ax_func)
     _draw_function(ax_func, xs, ys, tf.name)
     _draw_optimum(ax_func, result.x_opt, result.f_opt)
-    #_fix_axes(ax_func, xs, ys)
     ax_func.set_xlabel("x")
     ax_func.set_ylabel("f(x)")
     ax_func.set_title(f"{tf.name} — ottimo trovato", fontsize=10)
@@ -166,18 +153,10 @@ def plot_result(tf: TestFunction, result) -> plt.Figure:
     ax_pts.scatter(eval_xs, eval_ys, color=_C_OPT, s=30, zorder=5,
                    label=f"Punti valutati ({len(eval_xs)})")
     _draw_optimum(ax_pts, result.x_opt, result.f_opt)
-    #_fix_axes(ax_pts, xs, ys)
     ax_pts.set_xlabel("x")
     ax_pts.set_ylabel("f(x)")
     ax_pts.set_title(f"{tf.name} — punti valutati", fontsize=10)
     ax_pts.legend(fontsize=8)
-
-    # ── Convergenza ────────────────────────────────────────────────────────
-    _style_ax(ax_conv)
-    iters = [h[0] for h in result.history]
-    fvals = [h[2] for h in result.history]
-    _draw_convergence(ax_conv, iters, fvals, result.f_opt)
-    ax_conv.set_title("Convergenza dell'algoritmo", fontsize=10)
 
     fig.suptitle(
         f"Piyavski-Shubert — {tf.name}   "
