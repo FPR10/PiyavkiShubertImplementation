@@ -35,11 +35,14 @@ from visualizer import TestFunction
  
 # ── Utils ──────────────────────────────────────────────────────
 
-SEP  = "=" * 68
-SSEP = "-" * 68
+SEP  = "=" * 100
+SSEP = "-" * 100
  
  
+#Titolo tabella
 def _header():
+    print()
+    print()
     print(SEP)
     print("   ALGORITMO DI PIYAVSKI-SHUBERT")
     print(SEP)
@@ -69,7 +72,7 @@ def run_single(idx: int, func, a: float, b: float, L: float,
     """Esegue l'algoritmo e mostra l'output nella modalità richiesta."""
  
     # store_candidates serve sia per plot che per step
-    store = (mode in ("plot", "step"))
+    store = (mode == "plot" or mode == "step")
  
     t0 = time.perf_counter()
     result = piShAlgorithm(func, a, b, L,
@@ -109,7 +112,7 @@ def _launch_step(idx, func, a, b, L, result, tol):
         print(f"\n  [ATTENZIONE] matplotlib non disponibile: {e}")
  
  
-# ── Run suj tutte le funzioni ──────────────────────────────────────────────────────────────
+# ── Run su tutte le funzioni ──────────────────────────────────────────────────────────────
  
 def run_allfunctions(tol: float, max_iter: int) -> None:
     _header()

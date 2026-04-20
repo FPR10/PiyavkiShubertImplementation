@@ -135,7 +135,7 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
     
     #Check parametri
     if L <= 0:
-        raise ValueError("La costante di Lipschitz deve essere positiva")
+        raise ValueError("La costante di Lipschitz deve essere positivo")
     if a >= b:
         raise ValueError("a deve essere < b")
     
@@ -147,6 +147,7 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
     INIZIALIZZAZIONE 
     k=1 -> ho un solo sotto-intervallo in [a,b]
     '''
+    
     fa = f(a)
     fb = f(b)
     evaluations = 2
