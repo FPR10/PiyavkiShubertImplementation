@@ -62,8 +62,8 @@ def build_candidate(x_left: float, x_right: float, f_left: float, f_right: float
     Returns:
         Candidate
     """
-    x_hat = (x_left+x_right)/2 - (f_right-f_left)/(2*L)
-    lb = (f_left+f_right)/2 - L*(x_right-x_left)/2
+    x_hat = (x_left + x_right) / 2 - (f_right - f_left) / (2 * L)
+    lb = (f_left + f_right) / 2 - L * (x_right - x_left) / 2
     return Candidate(lb, x_hat, x_left, x_right, f_left, f_right)
 
 
@@ -72,7 +72,7 @@ class PiyavskiShubertRes:
     
     Attributes:
         x_opt (float): punto x* in cui è stato trovato il minimo approssimato.
-        f_opt (float): valore f(x*), ovvero il minimo trovato.
+        f_opt (float): valore f(x*)
         iterations (int): numero di iterazioni eseguite dall'algoritmo.
         evalutations (int): numero totale di valutazioni di f, incluse le due iniziali in a e b.
         
@@ -100,7 +100,7 @@ class PiyavskiShubertRes:
 """
 ALGORITMO
 """
-def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:float = 1e-4, max_iter: int= 1000, store_candidates: bool = False) -> PiyavskiShubertRes:
+def piShAlgorithm(f: Callable[[float], float], a: float, b: float, L: float, tol: float = 1e-4, max_iter: int = 1000, store_candidates: bool = False) -> PiyavskiShubertRes:
     """
     Algoritmo iterativo di Piyavski-Shubert per la minimizzazione globale
     di una funzione f Lipschitz-continua su un intervallo [a, b].
@@ -114,8 +114,8 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
                    minimi globali; un valore troppo grande rallenta la convergenza.
         
         tol (float, optional): Tolleranza sul criterio d'arresto. L'algoritmo
-                               si ferma quando la larghezza dell'intervallo con
-                               caratteristica minima è <= tol. Defaults to 1e-4.
+                               si ferma quando la differenza tra f_opt e il lower
+                               bound minimo è <= tol. Defaults to 1e-4.
         
         max_iter (int, optional): Numero massimo di iterazioni consentite.
                                   Criterio d'arresto alternativo a tol.
@@ -133,13 +133,13 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
                   valutati e (opzionalmente) il log dei candidati.
     """
     
-    #Check parametri
+    # Check parametri
     if L <= 0:
-        raise ValueError("La costante di Lipschitz deve essere positivo")
+        raise ValueError("La costante di Lipschitz deve essere positiva")
     if a >= b:
         raise ValueError("a deve essere < b")
     
-    #Precisione macchina per confronti robusti tra numeri reali
+    # Precisione macchina per confronti robusti tra numeri reali
     eps = sys.float_info.epsilon
     
     
@@ -153,21 +153,24 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
     evaluations = 2
     
     heap: List[Candidate] = []
-    heapq.heappush(heap, build_candidate(a,b,fa,fb,L))
+    heapq.heappush(heap, build_candidate(a, b, fa, fb, L))
     
-    #Confronto tra due reali. Sono uguali se |fa-fb|<eps
-    if fa-fb < eps:
+    
+    if abs(fa-fb)<eps:
+        #fa ed fb sono numericamente identici: scegli il punto a sx per convenzione
+        x_opt, f_opt = a, fa
+    elif fa < fb:
         x_opt, f_opt = a, fa
     else:
         x_opt, f_opt = b, fb
     
-    
-    #Contiene [iterazione, x_opt, f_opt]
+    # Contiene [iterazione, x_opt, f_opt]
     history = [(0, x_opt, f_opt)]
     candidates_log = []
     
-    
-    for iteration in range(1, max_iter+1):
+
+    iteration = 0
+    for iteration in range(1, max_iter + 1):
         
         if not heap:
             break
@@ -186,7 +189,7 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
         
         """Passo 5: nuova valutazione della funzione in x_hat
         """
-        x_new = max (best.x_left, min(best.x_right, best.x_hat))
+        x_new = max(best.x_left, min(best.x_right, best.x_hat))
         f_new = f(x_new)
         evaluations += 1
         
@@ -198,9 +201,9 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
             
             
         """Passo 1 + Passo 2: suddivisione dell'intervallo e calcolo delle nuove caratteristiche
-        x_new suddivide [x_left, x_right] in due nuovi sotto-intervallo
+        x_new suddivide [x_left, x_right] in due nuovi sotto-intervalli
         """
-        left_cand = build_candidate(best.x_left, x_new, best.func_left, f_new, L)
+        left_cand  = build_candidate(best.x_left, x_new, best.func_left, f_new, L)
         right_cand = build_candidate(x_new, best.x_right, f_new, best.func_right, L)
         
         
@@ -216,10 +219,8 @@ def piShAlgorithm(f:Callable[[float],float], a:float, b:float, L:float, tol:floa
         history.append((iteration, x_opt, f_opt))
 
         if store_candidates:
-            candidates_log.append(list(heap))
+            # sorted(heap) restituisce i candidati in ordine crescente di lower_bound
+            candidates_log.append(sorted(heap))
             
         
     return PiyavskiShubertRes(x_opt, f_opt, iteration, evaluations, history, candidates_log)
-        
-    
-    
