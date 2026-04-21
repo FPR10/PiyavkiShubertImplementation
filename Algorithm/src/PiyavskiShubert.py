@@ -157,7 +157,7 @@ def piShAlgorithm(f: Callable[[float], float], a: float, b: float, L: float, tol
     
     
     if abs(fa-fb)<eps:
-        #fa ed fb sono numericamente identici: scegli il punto a sx per convenzione
+        #fa ed fb sono numericamente identici: si sceglie il punto a sx per convenzione
         x_opt, f_opt = a, fa
     elif fa < fb:
         x_opt, f_opt = a, fa
@@ -187,7 +187,8 @@ def piShAlgorithm(f: Callable[[float], float], a: float, b: float, L: float, tol
         if f_opt - best.lower_bound <= tol:
             break
         
-        """Passo 5: nuova valutazione della funzione in x_hat
+        """x_hat è calcolato analiticamente e, se L è sottostimata, può cadere
+        fuori da [x_left, x_right]. Forzo che avvenga sempre all'interno dell'intervallo di competenza del candidato.
         """
         x_new = max(best.x_left, min(best.x_right, best.x_hat))
         f_new = f(x_new)
@@ -200,8 +201,8 @@ def piShAlgorithm(f: Callable[[float], float], a: float, b: float, L: float, tol
             x_opt, f_opt = x_new, f_new
             
             
-        """Passo 1 + Passo 2: suddivisione dell'intervallo e calcolo delle nuove caratteristiche
-        x_new suddivide [x_left, x_right] in due nuovi sotto-intervalli
+        """Espansione: x_new suddivide [x_left, x_right] in due sotto-intervalli.
+        Per ciascuno viene ricalcolata la caratteristica R (lower bound e x_hat).
         """
         left_cand  = build_candidate(best.x_left, x_new, best.func_left, f_new, L)
         right_cand = build_candidate(x_new, best.x_right, f_new, best.func_right, L)
