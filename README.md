@@ -51,7 +51,7 @@ python main.py --fn 5 --mode plot
 python main.py --fn 5 --mode step
 
 # Benchmark su tutte e 20 le funzioni
-python main.py --benchmark
+python main.py --allFunctions
 
 # Lista delle funzioni disponibili con parametri default
 python main.py --list
@@ -83,7 +83,7 @@ Lanciando `main.py` senza argomenti (ad esempio premendo *Run* in PyCharm o VS C
 | `--tol FLOAT` | float | `1e-4` | Tolleranza sul criterio d'arresto |
 | `--max-iter INT` | int | `10000` | Numero massimo di iterazioni |
 | `--mode` | str | `text` | Modalità output: `text` \| `plot` \| `step` |
-| `--benchmark` | flag | — | Esegue il benchmark su tutte e 20 le funzioni |
+| `--allFunctions` | flag | — | Esegue l'algoritmo su tutte e 20 le funzioni |
 | `--list` | flag | — | Stampa la lista delle funzioni disponibili |
 
 ### Modalità di output
